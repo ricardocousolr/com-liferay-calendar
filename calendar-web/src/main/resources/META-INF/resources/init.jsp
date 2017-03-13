@@ -209,35 +209,13 @@ List<Calendar> otherCalendars = new ArrayList<Calendar>();
 
 long[] calendarIds = StringUtil.split(SessionClicks.get(request, "com.liferay.calendar.web_otherCalendars", StringPool.BLANK), 0L);
 
-Calendar defaultCalendar = null;
-
 CalendarDisplayContext calendarDisplayContext = (CalendarDisplayContext)renderRequest.getAttribute(CalendarWebKeys.CALENDAR_DISPLAY_CONTEXT);
 
 if (calendarDisplayContext != null) {
 	otherCalendars = calendarDisplayContext.getOtherCalendars(calendarIds);
 }
 
-for (Calendar groupCalendar : groupCalendars) {
-	if (groupCalendar.isDefaultCalendar() && CalendarPermission.contains(themeDisplay.getPermissionChecker(), groupCalendar, CalendarActionKeys.MANAGE_BOOKINGS)) {
-		defaultCalendar = groupCalendar;
-	}
-}
-
-if (defaultCalendar == null) {
-	for (Calendar userCalendar : userCalendars) {
-		if (userCalendar.isDefaultCalendar()) {
-			defaultCalendar = userCalendar;
-		}
-	}
-}
-
-if (defaultCalendar == null && !groupCalendars.isEmpty()) {
-	for (Calendar groupCalendar : groupCalendars) {
-		if (groupCalendar.isDefaultCalendar() && CalendarPermission.contains(themeDisplay.getPermissionChecker(), groupCalendar, CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
-			defaultCalendar = groupCalendar;
-		}
-	}
-}
+Calendar defaultCalendar = calendarDisplayContext.getDefaultCalendar(groupCalendars, userCalendars);
 
 TimeZone userTimeZone = CalendarUtil.getCalendarBookingDisplayTimeZone(calendarBooking, TimeZone.getTimeZone(timeZoneId));
 TimeZone utcTimeZone = TimeZone.getTimeZone(StringPool.UTC);
