@@ -220,7 +220,7 @@ AUI.add(
 										if (item.get('defaultCalendar')) {
 											var calendarResourceId = item.get('calendarResourceId');
 
-											if (calendarResourceId == instance.get('groupCalendarResourceId') && item.get('permissions').MANAGE_BOOKINGS) {
+											if (calendarResourceId == instance.get('groupCalendarResourceId') && (item.get('permissions').MANAGE_BOOKINGS || item.get('permissions').VIEW_BOOKING_DETAILS)) {
 												defaultCalendar = item;
 											}
 											else if (calendarResourceId == instance.get('userCalendarResourceId') && defaultCalendar == null) {
